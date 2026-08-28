@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Advanced English Proficiency Test</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+
+  :root {
+    --ink: #16241f;
+    --ink-soft: #4b5b54;
+    --paper: #f4efe4;
+    --paper-card: #fffdf8;
+    --line: #ddd3bd;
+    --pine: #10362b;
+    --pine-light: #1c5240;
+    --gold: #b4863b;
+    --gold-soft: #e8d6ac;
+    --terracotta: #a8492f;
+    --ok: #1c6e4a;
+    --ok-bg: #e4f2ea;
+    --bad: #a8402d;
+    --bad-bg: #fbe9e4;
+    --shadow: 0 10px 30px -14px rgba(16,54,43,0.28);
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+    line-height: 1.7;
+  }
+  body {
+    background-image:
+      radial-gradient(circle at 12% 8%, rgba(180,134,59,0.08), transparent 40%),
+      radial-gradient(circle at 90% 92%, rgba(16,54,43,0.07), transparent 45%);
+  }
+  body.exam-active { -webkit-user-select: none; user-select: none; }
+  body.exam-active input, body.exam-active textarea, body.exam-active select { user-select: text; -webkit-user-select: text; }
+
+  ::selection { background: var(--gold-soft); }
+
+  /* ---------- Top masthead ---------- */
+  .top-bar {
+    background: linear-gradient(155deg, var(--pine) 0%, #0c2a21 65%, #0a231b 100%);
+    color: #f4efe4;
+    padding: 34px 24px 26px 24px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .top-bar::before {
+    content: "";
+    position: absolute; inset: 0;
+    background: repeating-linear-gradient(115deg, rgba(244,239,228,0.035) 0 2px, transparent 2px 26px);
+    pointer-events: none;
+  }
+  .top-bar .eyebrow {
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold-soft);
+    margin: 0 0 10px 0;
+    opacity: 0.9;
+  }
+  .top-bar h1 {
+    margin: 0 0 10px 0;
+    font-family: 'Playfair Display', 'Source Serif 4', Georgia, serif;
+    font-weight: 700;
+    font-size: 30px;
+    letter-spacing: 0.3px;
+    position: relative;
+  }
+  .top-bar p {
+    margin: 0;
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+    font-size: 13.5px;
+    letter-spacing: 0.2px;
+    color: #d9e4dc;
+    position: relative;
+  }
+  .top-bar .divider-orn {
+    width: 64px; height: 2px; margin: 16px auto 0 auto;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    position: relative;
+  }
+
+  /* ---------- Status / progress bar ---------- */
+  .status-bar {
+    position: sticky; top: 0; z-index: 30;
+    background: rgba(244,239,228,0.94);
+    backdrop-filter: blur(6px);
+    border-bottom: 1px solid var(--line);
+    padding: 10px 16px;
+  }
+  .status-row {
+    max-width: 920px; margin: 0 auto;
+    display: flex; align-items: center; gap: 12px;
+    flex-wrap: wrap; justify-content: space-between;
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+  }
+  .status-chip {
+    font-size: 12.5px;
+    color: var(--pine);
+    background: #fffdf8;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 6px 13px;
+    white-space: nowrap;
+    font-weight: 500;
+  }
+  .status-chip.timer { font-weight: 700; color: var(--pine); border-color: var(--gold-soft); background: #fbf4e2; }
+  .status-chip.timer.low { color: #fff; border-color: var(--bad); background: var(--terracotta); animation: pulseLow 1.4s ease-in-out infinite; }
+  @keyframes pulseLow { 0%,100% { opacity: 1; } 50% { opacity: 0.72; } }
+  .status-chip.switches { color: #7a4a2f; }
+  .nav-links { display: flex; gap: 6px; flex-wrap: wrap; }
+  .nav-links a {
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+    font-size: 12.5px; font-weight: 600;
+    text-decoration: none;
+    color: var(--pine);
+    border: 1px solid var(--pine);
+    border-radius: 999px;
+    padding: 5px 12px;
+    transition: all 0.15s ease;
+  }
+  .nav-links a:hover { background: var(--pine); color: #f4efe4; }
+
+  .progress-track {
+    max-width: 920px; margin: 9px auto 0 auto;
+    width: 100%; height: 7px;
+    background: #e3dcc9;
+    border-radius: 6px;
+    overflow: hidden;
+    border: 1px solid var(--line);
+  }
+  .progress-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--gold), var(--pine-light)); transition: width 0.4s ease; }
+  .progress-label {
+    max-width: 920px; margin: 5px auto 0 auto;
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+    font-size: 11.5px; color: var(--ink-soft); text-align: right;
+  }
+
+  .container { max-width: 920px; margin: 0 auto; padding: 26px 18px 110px 18px; }
+
+  /* ---------- Name box ---------- */
+  .name-box {
+    background: var(--paper-card);
+    border: 1px solid var(--line);
+    border-left: 4px solid var(--gold);
+    border-radius: 10px;
+    padding: 18px 20px;
+    margin-bottom: 26px;
+    box-shadow: var(--shadow);
+  }
+  .name-box label {
+    display: block; margin-bottom: 8px; font-weight: 700;
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+    font-size: 13px; letter-spacing: 0.3px; color: var(--pine);
+    text-transform: uppercase;
+  }
+  .name-box input {
+    width: 100%; padding: 10px 12px; font-size: 15.5px;
+    font-family: 'Source Serif 4', Georgia, serif;
+    border: 1px solid #c9bfa6; border-radius: 6px; background: #fffefb;
+  }
+  .name-box input:focus { outline: 2px solid var(--gold-soft); border-color: var(--gold); }
+
+  /* ---------- Note / callout ---------- */
+  .note-box {
+    background: #fbf4e2;
+    border: 1px solid var(--gold-soft);
+    border-left: 4px solid var(--gold);
+    border-radius: 8px;
+    padding: 13px 16px;
+    margin: 6px 0 18px 0;
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+    font-size: 13.5px;
+    color: #5c4a24;
+  }
+
+  /* ---------- Part headers ---------- */
+  .part-header {
+    margin: 44px 0 6px 0;
+    padding-bottom: 10px;
+    border-bottom: 3px solid var(--pine);
+    display: flex; align-items: baseline; gap: 10px;
+  }
+  .part-header h2 {
+    margin: 0; font-size: 21px;
+    font-family: 'Playfair Display', Georgia, serif;
+    color: var(--pine); letter-spacing: 0.2px;
+  }
+  .part-pending {
+    background: #fbf2df; border: 1px dashed var(--gold);
+    border-radius: 8px; padding: 14px 16px; margin: 10px 0;
+    font-family: 'Inter', sans-serif; font-size: 13.5px; color: #6b552b;
+  }
+
+  .sub-header {
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+    font-weight: 700; font-size: 14.5px;
+    color: #fffdf8;
+    background: var(--pine-light);
+    display: inline-block;
+    padding: 6px 14px;
+    border-radius: 999px;
+    margin: 26px 0 4px 0;
+  }
+  .sub-instructions {
+    font-family: 'Inter', sans-serif;
+    font-style: italic; font-size: 12.5px;
+    color: var(--ink-soft); margin: 6px 0 14px 0;
+  }
+
+  /* ---------- Question cards ---------- */
+  .card {
+    background: var(--paper-card);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 16px 18px;
+    margin-bottom: 12px;
+    box-shadow: 0 1px 0 rgba(16,54,43,0.03);
+    transition: box-shadow 0.15s ease, border-color 0.15s ease;
+  }
+  .card:hover { box-shadow: var(--shadow); border-color: #cbbf9f; }
+  .q-text { font-size: 15.5px; margin-bottom: 10px; }
+  .q-num {
+    font-weight: 700; color: #fff; margin-right: 8px;
+    background: var(--pine); border-radius: 6px;
+    padding: 1px 8px; font-family: 'Inter', sans-serif; font-size: 13px;
+  }
+  .manual-tag {
+    font-family: 'Inter', sans-serif; font-size: 10.5px; font-weight: 700;
+    color: var(--terracotta); background: #fbe9e4;
+    border-radius: 999px; padding: 2px 8px; margin-left: 6px;
+    vertical-align: middle; letter-spacing: 0.3px;
+  }
+
+  .options-grid { display: grid; gap: 8px; margin-top: 8px; }
+  .option-label {
+    display: flex; align-items: center; gap: 9px;
+    font-size: 14.5px; padding: 9px 12px;
+    border: 1px solid #d8cfb6; border-radius: 8px;
+    background: #fffefb; cursor: pointer;
+    transition: all 0.12s ease;
+  }
+  .option-label:hover { border-color: var(--gold); background: #fbf6e9; }
+  .option-label input { accent-color: var(--pine); width: 15px; height: 15px; }
+  .option-label.correct { background: var(--ok-bg); border-color: var(--ok); }
+  .option-label.incorrect { background: var(--bad-bg); border-color: var(--bad); }
+
+  .text-input {
+    width: 100%; padding: 9px 11px; font-size: 14.5px;
+    font-family: 'Source Serif 4', Georgia, serif;
+    border: 1px solid #c9bfa6; border-radius: 6px; background: #fffefb;
+    margin-top: 4px;
+  }
+  .text-input:focus { outline: 2px solid var(--gold-soft); border-color: var(--gold); }
+  .text-input.correct { background: var(--ok-bg); border-color: var(--ok); }
+  .text-input.incorrect { background: var(--bad-bg); border-color: var(--bad); }
+
+  .inline-blank {
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-size: 14.5px;
+    border: none; border-bottom: 2px solid var(--gold);
+    background: #fbf6e9;
+    padding: 2px 6px; margin: 0 2px;
+    min-width: 92px; border-radius: 3px 3px 0 0;
+  }
+  .inline-blank:focus { outline: none; border-bottom-color: var(--pine); background: #fff8e6; }
+  .inline-blank.correct { background: var(--ok-bg); border-bottom-color: var(--ok); }
+  .inline-blank.incorrect { background: var(--bad-bg); border-bottom-color: var(--bad); }
+  select.inline-blank { min-width: 240px; }
+
+  .passage-box {
+    font-size: 15.5px;
+    background: #fffefb;
+    line-height: 1.85;
+  }
+  .passage-box strong { color: var(--pine); }
+
+  .answer-reveal {
+    display: none; margin-top: 10px;
+    font-family: 'Inter', sans-serif; font-size: 12.5px; font-weight: 600;
+    color: var(--pine); background: var(--ok-bg);
+    border: 1px solid var(--ok); border-radius: 6px; padding: 7px 11px;
+  }
+
+  .essay-area {
+    width: 100%; min-height: 210px; padding: 12px 14px; font-size: 15px;
+    font-family: 'Source Serif 4', Georgia, serif;
+    border: 1px solid #c9bfa6; border-radius: 8px; background: #fffefb;
+    resize: vertical; margin-top: 6px; line-height: 1.75;
+  }
+  .essay-area:focus { outline: 2px solid var(--gold-soft); border-color: var(--gold); }
+  .essay-meta {
+    font-family: 'Inter', sans-serif; font-size: 12px; color: var(--ink-soft);
+    margin-top: 6px; text-align: right;
+  }
+  .essay-meta.over-under { color: var(--terracotta); font-weight: 600; }
+
+  /* ---------- Score box ---------- */
+  .score-box {
+    display: none; margin-top: 34px;
+    background: linear-gradient(160deg, #10362b, #0c2a21);
+    color: #f4efe4;
+    border-radius: 12px;
+    padding: 22px 24px;
+    box-shadow: var(--shadow);
+  }
+  .score-box p { margin: 6px 0; font-family: 'Inter', sans-serif; font-size: 14px; }
+  .score-box strong { color: var(--gold-soft); font-size: 17px; }
+
+  /* ---------- Footer bar ---------- */
+  .footer-bar {
+    position: fixed; bottom: 0; left: 0; right: 0; z-index: 40;
+    background: rgba(244,239,228,0.96);
+    backdrop-filter: blur(6px);
+    border-top: 1px solid var(--line);
+    padding: 12px 16px;
+    display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;
+  }
+  .footer-bar button {
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+    font-weight: 700; font-size: 13.5px;
+    border-radius: 999px; padding: 11px 22px;
+    border: none; cursor: pointer;
+    transition: transform 0.1s ease, box-shadow 0.15s ease;
+  }
+  .footer-bar button:active { transform: scale(0.97); }
+  .btn-submit { background: var(--pine); color: #f4efe4; }
+  .btn-submit:hover { background: var(--pine-light); }
+  .btn-submit:disabled { background: #b7c4bd; cursor: not-allowed; }
+  .btn-email { background: var(--gold); color: #2b220f; }
+  .btn-email:hover { filter: brightness(1.05); }
+  .btn-email:disabled { background: #e3d9bd; color: #9c9377; cursor: not-allowed; }
+  .btn-unlock { background: transparent; color: var(--pine); border: 1.5px solid var(--pine) !important; }
+  .btn-unlock:hover { background: var(--pine); color: #f4efe4; }
+  .btn-secondary { background: #e5ddc9; color: #4b3f26; }
+  .btn-secondary:hover { background: #d9cfb3; }
+
+  #emailStatus {
+    position: fixed; bottom: 66px; left: 50%; transform: translateX(-50%);
+    z-index: 41; display: none;
+    font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600;
+    background: #fffefb; border: 1px solid var(--line); border-radius: 8px;
+    padding: 8px 16px; box-shadow: var(--shadow);
+  }
+
+  /* ---------- Modals ---------- */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0; z-index: 80;
+    background: rgba(12,26,20,0.55);
+    align-items: center; justify-content: center; padding: 20px;
+  }
+  .modal-box {
+    background: var(--paper-card);
+    border-radius: 12px; max-width: 440px; width: 100%;
+    padding: 26px 26px 22px 26px;
+    box-shadow: 0 24px 60px -18px rgba(0,0,0,0.45);
+    border-top: 4px solid var(--gold);
+  }
+  .modal-box h3 {
+    margin: 0 0 8px 0; font-family: 'Playfair Display', Georgia, serif;
+    color: var(--pine); font-size: 20px;
+  }
+  .modal-box p { font-size: 14px; color: var(--ink-soft); margin: 0 0 14px 0; }
+  .modal-error {
+    display: none; color: var(--bad); font-family: 'Inter', sans-serif;
+    font-size: 12.5px; font-weight: 600; margin-bottom: 10px;
+  }
+  .modal-box input[type="password"] {
+    width: 100%; padding: 10px 12px; font-size: 15px;
+    border: 1px solid #c9bfa6; border-radius: 6px; background: #fffefb;
+    font-family: 'Inter', sans-serif;
+  }
+  .modal-actions { display: flex; gap: 10px; margin-top: 18px; justify-content: flex-end; }
+  .modal-actions button {
+    font-family: 'Inter', sans-serif; font-weight: 700; font-size: 13px;
+    border: none; border-radius: 999px; padding: 9px 18px; cursor: pointer;
+  }
+  .modal-list {
+    max-height: 160px; overflow-y: auto; font-family: 'Inter', sans-serif;
+    font-size: 13px; background: #fbf4e2; border-radius: 8px; padding: 10px 12px;
+    border: 1px solid var(--gold-soft); line-height: 1.9;
+  }
+
+  .copy-toast {
+    position: fixed; bottom: 68px; left: 50%; transform: translateX(-50%);
+    background: var(--pine); color: #f4efe4; font-family: 'Inter', sans-serif;
+    font-size: 12.5px; padding: 9px 18px;
+    border-radius: 999px; opacity: 0; pointer-events: none; transition: opacity 0.25s ease;
+    z-index: 60;
+  }
+  .copy-toast.show { opacity: 0.95; }
+
+  /* ---------- Reflection (end-of-test feedback) ---------- */
+  .reflection-card {
+    background: linear-gradient(165deg, #fffdf8 0%, #fbf4e2 100%);
+    border: 1px solid var(--gold-soft);
+    border-top: 4px solid var(--gold);
+  }
+  .reflection-title {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 18px; color: var(--pine); margin-bottom: 14px;
+  }
+  .reflection-scale {
+    display: flex; gap: 10px; flex-wrap: wrap; margin: 10px 0 16px 0;
+  }
+  .reflection-option {
+    display: flex; flex-direction: column; align-items: center; gap: 6px;
+    padding: 12px 14px; border-radius: 12px;
+    border: 1.5px solid #ddd3bd; background: #fffefb;
+    cursor: pointer; min-width: 84px; text-align: center;
+    transition: all 0.15s ease;
+  }
+  .reflection-option:hover { border-color: var(--gold); transform: translateY(-2px); }
+  .reflection-option input { position: absolute; opacity: 0; width: 0; height: 0; }
+  .reflection-option .reflection-emoji { font-size: 30px; line-height: 1; }
+  .reflection-option .reflection-label {
+    font-family: 'Inter', sans-serif; font-size: 11.5px; color: var(--ink-soft); font-weight: 600;
+  }
+  .reflection-option.selected {
+    border-color: var(--gold); background: #fbf0d6;
+    box-shadow: 0 4px 14px -6px rgba(180,134,59,0.5);
+  }
+  .reflection-option.selected .reflection-label { color: var(--pine); }
+  .reflection-comment { min-height: 110px; }
+
+  @media (max-width: 600px) {
+    .top-bar h1 { font-size: 23px; }
+    .status-row { gap: 8px; }
+    .container { padding: 20px 12px 120px 12px; }
+    .modal-box { padding: 20px 18px; }
+  }
+
+</style>
+</head>
+
+<body>
+
+<div class="top-bar">
+  <p class="eyebrow">Anh Nâng Cao &middot; Kiểm tra tháng 8</p>
+  <h1>Advanced English Proficiency Test</h1>
+  <p>Level: B1+ to B2+ &middot; Tổng điểm: 100 &middot; Thời gian làm bài: 90 phút</p>
+  <div class="divider-orn"></div>
+</div>
+
+<div class="status-bar">
+  <div class="status-row">
+    <div class="nav-links" id="navLinks"></div>
+    <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+      <span class="status-chip timer" id="timerChip">90:00</span>
+      <span class="status-chip switches" id="switchChip">Rời khỏi trang: 0 lần</span>
+    </div>
+  </div>
+  <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+  <div class="progress-label" id="progressLabel">0 câu đã trả lời</div>
+</div>
+
+<div class="container">
+
+  <div class="name-box">
+    <label for="studentName">Họ và tên học sinh</label>
+    <input type="text" id="studentName" class="text-input" placeholder="Nhập họ tên đầy đủ" style="margin-top:0;">
+  </div>
+
+  <div id="examArea"></div>
+
+  <div class="score-box" id="scoreBox"></div>
+
+</div>
+
+<div class="footer-bar">
+  <button class="btn-submit" id="submitBtn">Nộp bài</button>
+  <button class="btn-email" id="emailBtn" disabled>Gửi kết quả qua email</button>
+  <button class="btn-unlock" id="unlockBtn">Xem đáp án (giáo viên)</button>
+</div>
+<div id="emailStatus"></div>
+
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal-box">
+    <h3>Quyền truy cập giáo viên</h3>
+    <p>Nhập mật khẩu để xem đáp án đúng và gợi ý chấm bài.</p>
+    <div class="modal-error" id="modalError">Sai mật khẩu, vui lòng thử lại.</div>
+    <input type="password" id="passwordInput" placeholder="Mật khẩu">
+    <div class="modal-actions">
+      <button class="btn-unlock" id="confirmUnlock">Xác nhận</button>
+      <button class="btn-secondary" id="cancelUnlock">Đóng</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="confirmOverlay">
+  <div class="modal-box">
+    <h3 id="confirmTitle">Bạn còn câu chưa trả lời</h3>
+    <p id="confirmText">Danh sách các câu chưa trả lời:</p>
+    <div class="modal-list" id="unansweredList"></div>
+    <div class="modal-actions">
+      <button class="btn-secondary" id="backToExam">Quay lại làm bài</button>
+      <button class="btn-submit" id="confirmSubmitAnyway">Vẫn nộp bài</button>
+    </div>
+  </div>
+</div>
+
+<div class="copy-toast" id="copyToast">Chức năng sao chép đã được tắt trong khi làm bài</div>
+
+<script id="examDataJson" type="application/json">{"examTitle": "ADVANCED ENGLISH PROFICIENCY TEST", "timeAllowed": 90, "parts": [{"id": "A", "label": "PART A: LISTENING (17 points)", "pending": false, "blocks": [{"type": "subheader", "title": "Task 1 – Multiple Choice (7 points)", "instructions": "Listen to an interview about music therapy (“Can music be medicine?”) and choose the correct answer (A, B, or C)."}, {"type": "mc", "num": "1", "text": "What does Sarah say to describe music therapy?", "options": ["It relies on listening to your favourite music.", "It is designed to improve mental and physical health.", "It's entertainment used for healing."], "answer": 1, "auto": true}, {"type": "mc", "num": "2", "text": "What best distinguishes music therapy from casual listening?", "options": ["Casual listening does not affect people's emotions.", "Music therapy requires guidance.", "Both are equally effective for therapy."], "answer": 1, "auto": true}, {"type": "mc", "num": "3", "text": "According to Sarah, who can music therapy support?", "options": ["Only people with emotional issues or brain injuries.", "People suffering from anxiety and insomnia.", "People with mental health or mobility issues."], "answer": 2, "auto": true}, {"type": "mc", "num": "4", "text": "What progress did Mia make thanks to music therapy?", "options": ["She improved her mobility and speech.", "Singing helped her walk correctly again.", "She fully recovered her speech."], "answer": 0, "auto": true}, {"type": "mc", "num": "5", "text": "What emotional effects can music therapy have on patients?", "options": ["It helps people be more focused.", "Angry people can listen to an old favourite song and calm down.", "Playing an instrument can help with anger or frustration."], "answer": 2, "auto": true}, {"type": "mc", "num": "6", "text": "Which statement is NOT mentioned by Sarah as a common misconception?", "options": ["Any type of music can help a patient.", "It only works with people who believe in it.", "You don't need to be musical to have therapy."], "answer": 1, "auto": true}, {"type": "mc", "num": "7", "text": "What does Sarah say about the future of music therapy?", "options": ["It is already becoming part of many care institutions.", "There is still not enough scientific support.", "It will replace traditional treatments for some conditions."], "answer": 0, "auto": true}, {"type": "subheader", "title": "Task 2 – Gap Fill (10 points)", "instructions": "Listen to Brad talking about extreme snowboarding and fill in the missing words."}, {"type": "text", "num": "8", "text": "Brad says there are no __________ to warn extreme snowboarders of dangers.", "answers": ["signs", "warning signs"], "auto": true}, {"type": "text", "num": "9", "text": "Brad advises snowboarders always to follow the __________ when descending.", "answers": ["guide"], "auto": true}, {"type": "text", "num": "10", "text": "Brad always wears a __________ when he goes into the mountains.", "answers": ["helmet"], "auto": true}, {"type": "text", "num": "11", "text": "According to Brad, you need a lot of __________ to set off down the mountain.", "answers": ["confidence"], "auto": true}, {"type": "text", "num": "12", "text": "Brad particularly enjoys doing several __________ when he is going down a slope.", "answers": ["jumps"], "auto": true}, {"type": "text", "num": "13", "text": "Brad says at first he found it difficult to do a good __________ on steep slopes.", "answers": ["landing"], "auto": true}, {"type": "text", "num": "14", "text": "Brad says you must never __________ if you feel you're about to fall.", "answers": ["panic"], "auto": true}, {"type": "text", "num": "15", "text": "Brad advises against putting your weight on your __________ in a fall.", "answers": ["wrist", "wrists"], "auto": true}, {"type": "text", "num": "16", "text": "Brad always carries a __________ in case he is in difficulty following a fall.", "answers": ["device", "small device"], "auto": true}, {"type": "text", "num": "17", "text": "In the future, Brad would most like to try __________ snowboarding.", "answers": ["parachute"], "auto": true}]}, {"id": "B", "label": "PART B: LEXICO-GRAMMAR (50 points)", "pending": false, "blocks": [{"type": "subheader", "title": "B.I – Word Stress (7 points)", "instructions": "Choose the word whose main stress is placed differently from the others."}, {"type": "mc", "num": "18", "text": "Choose the word whose main stress is placed differently from the others.", "options": ["machinery", "admirable", "preferable", "comfortable"], "answer": 0, "auto": true}, {"type": "mc", "num": "19", "text": "Choose the word whose main stress is placed differently from the others.", "options": ["committee", "infamous", "mischievous", "recipe"], "answer": 0, "auto": true}, {"type": "mc", "num": "20", "text": "Choose the word whose main stress is placed differently from the others.", "options": ["vehicle", "ceremony", "delivery", "accuracy"], "answer": 2, "auto": true}, {"type": "mc", "num": "21", "text": "Choose the word whose main stress is placed differently from the others.", "options": ["photography", "geography", "architecture", "biology"], "answer": 2, "auto": true}, {"type": "mc", "num": "22", "text": "Choose the word whose main stress is placed differently from the others.", "options": ["recover", "obstacle", "industry", "category"], "answer": 0, "auto": true}, {"type": "mc", "num": "23", "text": "Choose the word whose main stress is placed differently from the others.", "options": ["politics", "television", "vocabulary", "dictionary"], "answer": 2, "auto": true}, {"type": "mc", "num": "24", "text": "Choose the word whose main stress is placed differently from the others.", "options": ["magazine", "volunteer", "kangaroo", "majority"], "answer": 3, "auto": true}, {"type": "subheader", "title": "B.II – Pronunciation (8 points)", "instructions": "Choose the word whose underlined part is pronounced differently from the others."}, {"type": "mc", "num": "25", "text": "Choose the word whose underlined part is pronounced differently from the others.", "options": ["CHaracter", "arCHitecture", "CHimpanzee", "stomACH"], "answer": 2, "auto": true}, {"type": "mc", "num": "26", "text": "Choose the word whose underlined part is pronounced differently from the others.", "options": ["cAnal", "cAnopy", "cApitalism", "cAtalog"], "answer": 0, "auto": true}, {"type": "mc", "num": "27", "text": "Choose the word whose underlined part is pronounced differently from the others.", "options": ["mAchinery", "Adversary", "Aftermath", "Algebra"], "answer": 0, "auto": true}, {"type": "mc", "num": "28", "text": "Choose the word whose underlined part is pronounced differently from the others.", "options": ["pOlitics", "pOlice", "pOssibility", "pOlitician"], "answer": 1, "auto": true}, {"type": "mc", "num": "29", "text": "Choose the word whose underlined part is pronounced differently from the others.", "options": ["Environment", "Establishment", "Event", "Evidence"], "answer": 3, "auto": true}, {"type": "mc", "num": "30", "text": "Choose the word whose underlined part is pronounced differently from the others.", "options": ["rEbel (v)", "rEject (v)", "rEtain (v)", "rEpresent (v)"], "answer": 3, "auto": true}, {"type": "mc", "num": "31", "text": "Choose the word whose underlined part is pronounced differently from the others.", "options": ["gUItar", "bUIld", "gUIlty", "sUIt"], "answer": 3, "auto": true}, {"type": "mc", "num": "32", "text": "Choose the word whose underlined part is pronounced differently from the others.", "options": ["uNIQUE", "anTIQUE", "techniQUE", "arGUE"], "answer": 3, "auto": true}, {"type": "subheader", "title": "B.III – Grammar & Vocabulary (15 points)", "instructions": "Choose the best answer (A, B, C, or D) to complete each sentence. Focus on advanced subject-verb agreement."}, {"type": "mc", "num": "33", "text": "A number of researchers _____ deeply into the mystery of lucid dreaming recently.", "options": ["has delved", "have delved", "delves", "is delving"], "answer": 1, "auto": true}, {"type": "mc", "num": "34", "text": "The number of hours the average person spends dreaming each night _____ roughly two hours.", "options": ["is", "are", "were", "have been"], "answer": 0, "auto": true}, {"type": "mc", "num": "35", "text": "Neither the volunteers nor the lead scientist _____ expected such bizarre dream patterns to emerge.", "options": ["has", "have", "are", "were"], "answer": 0, "auto": true}, {"type": "mc", "num": "36", "text": "Physics _____ proven to be a surprisingly helpful subject for students analyzing human brain waves.", "options": ["have", "has", "are", "were"], "answer": 1, "auto": true}, {"type": "mc", "num": "37", "text": "Dr. Smith is one of the psychologists who _____ conducting the groundbreaking study on night terrors.", "options": ["is", "are", "has", "was"], "answer": 1, "auto": true}, {"type": "mc", "num": "38", "text": "She is the ONLY one of the subjects who _____ reported a recurring nightmare every single week.", "options": ["have", "has", "are", "were"], "answer": 1, "auto": true}, {"type": "mc", "num": "39", "text": "Hidden within the deep subconscious mind _____ deeply rooted fears and unfulfilled desires.", "options": ["lie", "lies", "is lying", "has lain"], "answer": 0, "auto": true}, {"type": "mc", "num": "40", "text": "Every doctor and every nurse in the sleep clinic _____ required to undergo specialized training on sleep paralysis.", "options": ["are", "were", "is", "have been"], "answer": 2, "auto": true}, {"type": "mc", "num": "41", "text": "Fifty percent of the recorded dream data _____ successfully analyzed by the new AI software.", "options": ["has been", "have been", "are", "were"], "answer": 0, "auto": true}, {"type": "mc", "num": "42", "text": "Not only the lack of sleep but also chronic nightmares _____ directly to elevated stress levels during the day.", "options": ["contributes", "contribute", "is contributing", "has contributed"], "answer": 1, "auto": true}, {"type": "mc", "num": "43", "text": "The public _____ heavily divided on the ethical implications of dream manipulation technology.", "options": ["is", "are", "has", "was"], "answer": 1, "auto": true}, {"type": "mc", "num": "44", "text": "More than one patient _____ reported seeing strange figures hovering in their bedroom during sleep paralysis.", "options": ["have", "has", "are", "were"], "answer": 1, "auto": true}, {"type": "mc", "num": "45", "text": "The psychologist, along with several of her brilliant assistants, _____ preparing to publish a new book on sleep psychology.", "options": ["are", "were", "is", "have been"], "answer": 2, "auto": true}, {"type": "mc", "num": "46", "text": "Many a scientist _____ tried to explain why we forget our dreams so quickly.", "options": ["have", "has", "are", "were"], "answer": 1, "auto": true}, {"type": "mc", "num": "47", "text": "Two-thirds of the new sleep medication _____ already been prescribed to the clinic's most severe insomniacs.", "options": ["have", "has", "are", "were"], "answer": 1, "auto": true}, {"type": "subheader", "title": "B.IV – Prepositions (5 points)", "instructions": "Fill in each blank with the correct preposition."}, {"type": "text", "num": "48", "text": "Some people are highly susceptible __________ sleep paralysis during periods of extreme stress.", "answers": ["to"], "auto": true}, {"type": "text", "num": "49", "text": "The new research finally sheds light __________ why we instantly forget our dreams upon waking.", "answers": ["on"], "auto": true}, {"type": "text", "num": "50", "text": "The therapy relies heavily __________ the patient's ability to recall tiny emotional details.", "answers": ["on"], "auto": true}, {"type": "text", "num": "51", "text": "He is completely obsessed __________ interpreting every single symbol he sees in his sleep.", "answers": ["with"], "auto": true}, {"type": "text", "num": "52", "text": "Frequent nightmares are often associated __________ underlying psychological trauma.", "answers": ["with"], "auto": true}, {"type": "subheader", "title": "B.V – Word Formation (10 points)", "instructions": "Provide the correct form of the word in brackets."}, {"type": "text", "num": "53", "text": "The __________ of REM sleep completely changed modern psychology forever. <strong>(DISCOVER)</strong>", "answers": ["discovery"], "auto": true}, {"type": "text", "num": "54", "text": "Dreams are often highly __________ of the events happening in our waking lives. <strong>(SYMBOL)</strong>", "answers": ["symbolic"], "auto": true}, {"type": "text", "num": "55", "text": "It's totally __________ why some people claim they never remember their dreams. <strong>(EXPLAIN)</strong>", "answers": ["inexplicable"], "auto": true}, {"type": "text", "num": "56", "text": "Prolonged sleep __________ can lead to severe hallucinations and mood swings. <strong>(DEPRIVE)</strong>", "answers": ["deprivation"], "auto": true}, {"type": "text", "num": "57", "text": "She found the nightmare so __________ that she woke up screaming in the dark. <strong>(TERROR)</strong>", "answers": ["terrifying"], "auto": true}, {"type": "text", "num": "58", "text": "He provided a very detailed and __________ breakdown of his recurring dream. <strong>(ANALYZE)</strong>", "answers": ["analytical"], "auto": true}, {"type": "text", "num": "59", "text": "The __________ of nightmares often increases significantly during stressful academic periods. <strong>(FREQUENT)</strong>", "answers": ["frequency"], "auto": true}, {"type": "text", "num": "60", "text": "Through lucid dreaming, one can gain full __________ while remaining asleep. <strong>(AWARE)</strong>", "answers": ["awareness"], "auto": true}, {"type": "text", "num": "61", "text": "The theory of collective unconscious remains highly __________ among mainstream neurologists. <strong>(CONTROVERSY)</strong>", "answers": ["controversial"], "auto": true}, {"type": "text", "num": "62", "text": "Some scientists stubbornly argue that dreams are just __________ neural static with no real purpose. <strong>(MEAN)</strong>", "answers": ["meaningless"], "auto": true}, {"type": "subheader", "title": "B.VI – Verb Form (5 points)", "instructions": "Put the verbs in brackets into the correct tense or form, paying close attention to subject-verb agreement."}, {"type": "text", "num": "63", "text": "Bread and butter (be) __________ the only thing the patient asked for after waking up from the coma.", "answers": ["is"], "auto": true}, {"type": "text", "num": "64", "text": "Nothing (fascinate) __________ me more than the bizarre logic and structure of dreams.", "answers": ["fascinates"], "auto": true}, {"type": "text", "num": "65", "text": "The cattle (graze) __________ peacefully in the meadow when a sudden loud noise woke me up from my dream.", "answers": ["were grazing"], "auto": true}, {"type": "text", "num": "66", "text": "\"Tom and Jerry\" (be) __________ a cartoon she often hallucinates about when experiencing sleep deprivation.", "answers": ["is"], "auto": true}, {"type": "text", "num": "67", "text": "Ten miles (seem) __________ like a short distance to fly when you are controlling a lucid dream.", "answers": ["seems"], "auto": true}]}, {"id": "C", "label": "PART C: READING (16 points)", "pending": false, "blocks": [{"type": "subheader", "title": "C.I – Open Cloze (5 points)", "instructions": "Fill in each gap with ONE suitable word."}, {"type": "clozePassage", "html": "Dreams are essentially stories and images that our minds create {{68}} we sleep. They can be entertaining, fun, romantic, disturbing, {{69}} sometimes downright bizarre. But why do we dream at all? {{70}} are many different scientific theories, but no one knows for absolute sure. Some researchers say dreams have no real biological purpose or meaning. Others, however, firmly believe we need dreams to protect our mental and emotional health. {{71}} example, dreams might help us process our daily emotional baggage. {{72}} you ever woken up crying or laughing from a dream? That is your brain processing emotions.", "blanks": [{"num": "68", "kind": "text", "answers": ["while", "when", "as"], "auto": true}, {"num": "69", "kind": "text", "answers": ["or", "and"], "auto": true}, {"num": "70", "kind": "text", "answers": ["There"], "auto": true}, {"num": "71", "kind": "text", "answers": ["For"], "auto": true}, {"num": "72", "kind": "text", "answers": ["Have"], "auto": true}]}, {"type": "subheader", "title": "C.II – Gapped Text (6 points)", "instructions": "Six sentences have been removed from the text below. Choose from sentences A–G the one which fits each gap (73–78). There is one extra sentence."}, {"type": "clozePassage", "html": "Lucid dreaming is a fascinating phenomenon where the sleeper suddenly becomes aware they are dreaming. {{73}} In this stage of sleep, the eyes move rapidly, breathing becomes irregular, and vivid dreams occur.<br><br>Once aware, the dreamer can often exert some degree of control over their actions within the dream environment. {{74}} The possibilities are essentially limited only by one's imagination and mental focus.<br><br>Because of this incredible freedom, many people actively want to learn how to achieve this state on demand. {{75}} Techniques include performing reality testing throughout the day and maintaining good sleep hygiene.<br><br>Dedicated dreamers highly recommend writing down every single detail immediately upon waking up. {{76}} This habit significantly improves overall dream recall, which is an absolute prerequisite for achieving lucidity.<br><br>While exploring the subconscious mind can be thrilling, it is not without its potential drawbacks. {{77}} Constantly waking yourself up in the middle of the night to record dreams might lead to severe daytime fatigue.<br><br>Ultimately, lucid dreaming is a powerful tool for self-discovery and even overcoming chronic nightmares. {{78}} Those with certain psychological conditions should always consult a medical professional before attempting these techniques.", "blanks": [{"num": "73", "kind": "mc", "options": ["However, it takes practice, discipline, and patience.", "This distinct state of consciousness primarily occurs during REM sleep.", "You can choose to fly, travel through time, or visit imaginary worlds.", "Some sleep experts warn about potential sleep cycle disruptions.", "During this phase, your brain is almost as active as when you are fully awake.", "They often keep a dedicated journal and a pen right beside their bed.", "Despite these amazing psychological benefits, it is not recommended for everyone."], "answer": 1, "auto": true}, {"num": "74", "kind": "mc", "options": ["However, it takes practice, discipline, and patience.", "This distinct state of consciousness primarily occurs during REM sleep.", "You can choose to fly, travel through time, or visit imaginary worlds.", "Some sleep experts warn about potential sleep cycle disruptions.", "During this phase, your brain is almost as active as when you are fully awake.", "They often keep a dedicated journal and a pen right beside their bed.", "Despite these amazing psychological benefits, it is not recommended for everyone."], "answer": 2, "auto": true}, {"num": "75", "kind": "mc", "options": ["However, it takes practice, discipline, and patience.", "This distinct state of consciousness primarily occurs during REM sleep.", "You can choose to fly, travel through time, or visit imaginary worlds.", "Some sleep experts warn about potential sleep cycle disruptions.", "During this phase, your brain is almost as active as when you are fully awake.", "They often keep a dedicated journal and a pen right beside their bed.", "Despite these amazing psychological benefits, it is not recommended for everyone."], "answer": 0, "auto": true}, {"num": "76", "kind": "mc", "options": ["However, it takes practice, discipline, and patience.", "This distinct state of consciousness primarily occurs during REM sleep.", "You can choose to fly, travel through time, or visit imaginary worlds.", "Some sleep experts warn about potential sleep cycle disruptions.", "During this phase, your brain is almost as active as when you are fully awake.", "They often keep a dedicated journal and a pen right beside their bed.", "Despite these amazing psychological benefits, it is not recommended for everyone."], "answer": 5, "auto": true}, {"num": "77", "kind": "mc", "options": ["However, it takes practice, discipline, and patience.", "This distinct state of consciousness primarily occurs during REM sleep.", "You can choose to fly, travel through time, or visit imaginary worlds.", "Some sleep experts warn about potential sleep cycle disruptions.", "During this phase, your brain is almost as active as when you are fully awake.", "They often keep a dedicated journal and a pen right beside their bed.", "Despite these amazing psychological benefits, it is not recommended for everyone."], "answer": 3, "auto": true}, {"num": "78", "kind": "mc", "options": ["However, it takes practice, discipline, and patience.", "This distinct state of consciousness primarily occurs during REM sleep.", "You can choose to fly, travel through time, or visit imaginary worlds.", "Some sleep experts warn about potential sleep cycle disruptions.", "During this phase, your brain is almost as active as when you are fully awake.", "They often keep a dedicated journal and a pen right beside their bed.", "Despite these amazing psychological benefits, it is not recommended for everyone."], "answer": 6, "auto": true}]}, {"type": "subheader", "title": "C.III – Multiple Choice Cloze (5 points)", "instructions": "Choose the best option (A, B, C, or D) to fill in each gap."}, {"type": "clozePassage", "html": "<strong>Why do we forget our dreams?</strong><br><br>It is estimated that humans forget up to 95% of all dreams shortly after waking up. Researchers believe this is a natural {{79}} designed to prevent our brains from being overloaded with useless visual information. During sleep, the brain regions responsible for forming long-term memories are essentially shut {{80}}. Furthermore, neurotransmitters like acetylcholine, which play a {{81}} role in memory retention, are at their absolute lowest levels during certain sleep phases. Unless a dream is particularly emotional or we happen to wake up immediately {{82}} it, the vivid images simply {{83}} away into nothingness.", "blanks": [{"num": "79", "kind": "mc", "options": ["process", "system", "action", "habit"], "answer": 0, "auto": true}, {"num": "80", "kind": "mc", "options": ["down", "off", "out", "up"], "answer": 0, "auto": true}, {"num": "81", "kind": "mc", "options": ["crucial", "heavy", "severe", "solid"], "answer": 0, "auto": true}, {"num": "82", "kind": "mc", "options": ["during", "beneath", "under", "inside"], "answer": 0, "auto": true}, {"num": "83", "kind": "mc", "options": ["fade", "wash", "fall", "drop"], "answer": 0, "auto": true}]}]}, {"id": "D", "label": "PART D: WRITING (17 points)", "pending": false, "blocks": [{"type": "subheader", "title": "D.I – Sentence Transformation (5 points)", "instructions": "Complete the second sentence so that it has a similar meaning to the first, using the word given. Do not change the word given."}, {"type": "text", "num": "84", "text": "He started analyzing dreams professionally five years ago. <strong>(BEEN)</strong><br>He __________________________________________________ professionally for five years.", "answers": ["He has been analyzing dreams professionally for five years."], "auto": false, "refLabel": "Đáp án gợi ý"}, {"type": "text", "num": "85", "text": "\"Why don't you keep a dream journal beside your bed?\" the psychologist said to me. <strong>(ADVISED)</strong><br>The psychologist __________________________________________________ a dream journal beside my bed.", "answers": ["The psychologist advised me to keep a dream journal beside my bed."], "auto": false, "refLabel": "Đáp án gợi ý"}, {"type": "text", "num": "86", "text": "I am absolutely sure she didn't realize she was sleepwalking. <strong>(HAVE)</strong><br>She __________________________________________________ realized she was sleepwalking.", "answers": ["She can't have / couldn't have realized she was sleepwalking."], "auto": false, "refLabel": "Đáp án gợi ý"}, {"type": "text", "num": "87", "text": "The psychologist is studying a patient whose nightmares are very severe. <strong>(BEING)</strong><br>The patient whose nightmares are very severe __________________________________________________ by the psychologist.", "answers": ["The patient whose nightmares are very severe is being studied by the psychologist."], "auto": false, "refLabel": "Đáp án gợi ý"}, {"type": "text", "num": "88", "text": "Despite having a terrifying nightmare, she went back to sleep easily. <strong>(ALTHOUGH)</strong><br>She went back to sleep easily __________________________________________________ a terrifying nightmare.", "answers": ["She went back to sleep easily although she had had a terrifying nightmare."], "auto": false, "refLabel": "Đáp án gợi ý"}, {"type": "essay", "num": "89", "title": "D.II – Essay Writing (12 points)", "prompt": "Write an essay of about 250 words on the following topic:<br><br><em>“Why do some people remember their dreams clearly while others forget them immediately? Is it important for us to understand the meaning behind our dreams?”</em>"}, {"type": "reflection", "num": "90", "prompt": "Em đánh giá trải nghiệm học tập trong tháng 8 vừa qua như thế nào?", "commentPlaceholder": "Chia sẻ thêm điều em thích, điều em muốn cải thiện, hoặc bất kỳ điều gì em muốn nhắn gửi tới anh/chị...", "scale": [{"emoji": "😞", "label": "Chưa hài lòng"}, {"emoji": "😐", "label": "Tạm ổn"}, {"emoji": "🙂", "label": "Khá ổn"}, {"emoji": "😄", "label": "Hài lòng"}, {"emoji": "🤩", "label": "Rất hài lòng"}]}]}]}</script>
+<script>
+// ---------- Load data ----------
+const examData = JSON.parse(document.getElementById('examDataJson').textContent);
+const TEACHER_EMAIL = "ddangminh1905@gmail.com";
+const PASSWORD = "anhnangcao1";
+const TOTAL_SECONDS = 90 * 60;
+
+const examArea = document.getElementById('examArea');
+const navLinks = document.getElementById('navLinks');
+
+// registry of all answerable items: {id, kind:'mc'|'text'|'clozeText'|'clozeMc'|'essay', auto, num, partId, answers/answer, options, minWords, maxWords, refLabel}
+const registry = [];
+
+function normalize(str) {
+  return (str || '').toLowerCase().trim().replace(/[.,!?;:'"]/g, '').replace(/\s+/g, ' ');
+}
+
+function stripTags(str) {
+  return (str || '').replace(/<[^>]+>/g, '');
+}
+
+function el(tag, className, html) {
+  const e = document.createElement(tag);
+  if (className) e.className = className;
+  if (html !== undefined) e.innerHTML = html;
+  return e;
+}
+
+function renderClozeHtml(html, blanks) {
+  let out = html;
+  blanks.forEach(b => {
+    const token = '{{' + b.num + '}}';
+    let inputHtml = '';
+    if (b.kind === 'text') {
+      inputHtml = '<input type="text" class="inline-blank" id="ans_' + b.num + '" data-num="' + b.num + '" autocomplete="off">';
+    } else {
+      let opts = '<option value="">(' + b.num + ')</option>';
+      b.options.forEach((opt, idx) => {
+        const letter = String.fromCharCode(65 + idx);
+        opts += '<option value="' + idx + '">' + letter + '. ' + opt.replace(/"/g, '&quot;') + '</option>';
+      });
+      inputHtml = '<select class="inline-blank" id="ans_' + b.num + '" data-num="' + b.num + '">' + opts + '</select>';
+    }
+    out = out.split(token).join(inputHtml);
+  });
+  return out;
+}
+
+function buildNavLinks() {
+  examData.parts.forEach(p => {
+    const a = document.createElement('a');
+    a.href = '#part-' + p.id;
+    a.textContent = 'Phần ' + p.id;
+    navLinks.appendChild(a);
+  });
+}
+
+function renderExam() {
+  examData.parts.forEach(part => {
+    const header = el('div', 'part-header', '<h2 id="part-' + part.id + '">' + part.label + '</h2>');
+    examArea.appendChild(header);
+
+    if (part.pending) {
+      if (part.pendingNote) examArea.appendChild(el('div', 'part-pending', part.pendingNote));
+      return;
+    }
+
+    part.blocks.forEach(block => {
+      if (block.type === 'subheader') {
+        examArea.appendChild(el('div', 'sub-header', block.title));
+        if (block.instructions) examArea.appendChild(el('div', 'sub-instructions', block.instructions));
+      } else if (block.type === 'note') {
+        examArea.appendChild(el('div', 'note-box', block.html));
+      } else if (block.type === 'reflection') {
+        const card = el('div', 'card reflection-card');
+        card.id = 'q_' + part.id + '_' + block.num;
+        let scaleHtml = '<div class="reflection-scale">';
+        block.scale.forEach((s, idx) => {
+          scaleHtml += '<label class="reflection-option"><input type="radio" name="reflectionRating" value="' + idx + '">' +
+            '<span class="reflection-emoji">' + s.emoji + '</span><span class="reflection-label">' + s.label + '</span></label>';
+        });
+        scaleHtml += '</div>';
+        let inner = '<div class="reflection-title">' + block.prompt + '</div>' + scaleHtml;
+        inner += '<textarea class="essay-area reflection-comment" id="reflectionComment" placeholder="' + (block.commentPlaceholder || '').replace(/"/g, '&quot;') + '"></textarea>';
+        card.innerHTML = inner;
+        examArea.appendChild(card);
+        card.querySelectorAll('.reflection-option input').forEach(inp => {
+          inp.addEventListener('change', () => {
+            card.querySelectorAll('.reflection-option').forEach(l => l.classList.remove('selected'));
+            inp.closest('.reflection-option').classList.add('selected');
+          });
+        });
+      } else if (block.type === 'passage') {
+        examArea.appendChild(el('div', 'card passage-box', block.html));
+      } else if (block.type === 'mc') {
+        const card = el('div', 'card');
+        card.id = 'q_' + part.id + '_' + block.num;
+        let inner = '<div class="q-text"><span class="q-num">' + block.num + '</span>' + block.text + (block.auto ? '' : ' <span class="manual-tag">GV chấm</span>') + '</div>';
+        inner += '<div class="options-grid">';
+        block.options.forEach((opt, idx) => {
+          const letter = String.fromCharCode(65 + idx);
+          inner += '<label class="option-label"><input type="radio" name="mc_' + part.id + '_' + block.num + '" value="' + idx + '"> ' + letter + '. ' + opt.replace(/"/g, '&quot;') + '</label>';
+        });
+        inner += '</div>';
+        inner += '<div class="answer-reveal" id="reveal_' + part.id + '_' + block.num + '"></div>';
+        card.innerHTML = inner;
+        examArea.appendChild(card);
+        registry.push({ id: part.id + '_' + block.num, kind: 'mc', auto: block.auto, num: block.num, partId: part.id, answer: block.answer, options: block.options, text: block.text });
+      } else if (block.type === 'text') {
+        const card = el('div', 'card');
+        card.id = 'q_' + part.id + '_' + block.num;
+        let inner = '<div class="q-text"><span class="q-num">' + block.num + '</span>' + block.text + (block.auto ? '' : ' <span class="manual-tag">GV chấm</span>') + '</div>';
+        inner += '<input type="text" class="text-input" id="ans_' + part.id + '_' + block.num + '" placeholder="Nhập câu trả lời" autocomplete="off">';
+        inner += '<div class="answer-reveal" id="reveal_' + part.id + '_' + block.num + '"></div>';
+        card.innerHTML = inner;
+        examArea.appendChild(card);
+        registry.push({ id: part.id + '_' + block.num, kind: 'text', auto: block.auto, num: block.num, partId: part.id, answers: block.answers, refLabel: block.refLabel, text: block.text });
+      } else if (block.type === 'clozePassage') {
+        const card = el('div', 'card passage-box');
+        card.innerHTML = renderClozeHtml(block.html, block.blanks);
+        examArea.appendChild(card);
+        block.blanks.forEach(b => {
+          registry.push({
+            id: part.id + '_' + b.num, kind: b.kind === 'mc' ? 'clozeMc' : 'clozeText', auto: b.auto,
+            num: b.num, partId: part.id, answers: b.answers, answer: b.answer, options: b.options
+          });
+        });
+      } else if (block.type === 'essay') {
+        const card = el('div', 'card');
+        card.id = 'q_' + part.id + '_' + block.num;
+        let inner = '<div class="q-text"><span class="q-num">' + block.title + '</span> <span class="manual-tag">GV chấm</span></div>';
+        inner += '<div style="margin-top:8px;">' + block.prompt + '</div>';
+        inner += '<textarea class="essay-area" id="ans_' + part.id + '_' + block.num + '" placeholder="Viết bài luận của bạn ở đây..."></textarea>';
+        inner += '<div class="essay-meta" id="wordCount_' + part.id + '_' + block.num + '">0 từ</div>';
+        card.innerHTML = inner;
+        examArea.appendChild(card);
+        registry.push({ id: part.id + '_' + block.num, kind: 'essay', auto: false, num: block.num, partId: part.id });
+      }
+    });
+  });
+}
+
+function getAnswerValue(item) {
+  if (item.kind === 'mc') {
+    const checked = document.querySelector('input[name="mc_' + item.partId + '_' + item.num + '"]:checked');
+    return checked ? parseInt(checked.value, 10) : null;
+  } else if (item.kind === 'text') {
+    const elx = document.getElementById('ans_' + item.partId + '_' + item.num);
+    return elx ? elx.value : '';
+  } else if (item.kind === 'clozeText') {
+    const elx = document.getElementById('ans_' + item.num);
+    return elx ? elx.value : '';
+  } else if (item.kind === 'clozeMc') {
+    const elx = document.getElementById('ans_' + item.num);
+    return elx && elx.value !== '' ? parseInt(elx.value, 10) : null;
+  } else if (item.kind === 'essay') {
+    const elx = document.getElementById('ans_' + item.partId + '_' + item.num);
+    return elx ? elx.value : '';
+  }
+  return '';
+}
+
+function isAnswered(item) {
+  const v = getAnswerValue(item);
+  if (item.kind === 'mc' || item.kind === 'clozeMc') return v !== null && v !== undefined;
+  return v && v.trim && v.trim() !== '';
+}
+
+function isCorrect(item) {
+  if (item.kind === 'mc' || item.kind === 'clozeMc') {
+    const v = getAnswerValue(item);
+    return v !== null && v === item.answer;
+  }
+  if (item.kind === 'text' || item.kind === 'clozeText') {
+    const v = normalize(getAnswerValue(item));
+    return (item.answers || []).some(a => normalize(a) === v);
+  }
+  return false;
+}
+
+function updateProgress() {
+  let answered = 0;
+  registry.forEach(item => { if (isAnswered(item)) answered++; });
+  const pct = registry.length ? Math.round((answered / registry.length) * 100) : 0;
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressLabel').textContent = answered + ' / ' + registry.length + ' câu đã trả lời (' + pct + '%)';
+  updateEssayWordCounts();
+}
+
+function updateEssayWordCounts() {
+  registry.filter(i => i.kind === 'essay').forEach(item => {
+    const elx = document.getElementById('ans_' + item.partId + '_' + item.num);
+    const label = document.getElementById('wordCount_' + item.partId + '_' + item.num);
+    if (!elx || !label) return;
+    const words = elx.value.trim() === '' ? 0 : elx.value.trim().split(/\s+/).length;
+    label.textContent = words + ' từ';
+  });
+}
+
+examArea.addEventListener('change', updateProgress);
+examArea.addEventListener('input', updateProgress);
+
+// ---------- Submit / grading ----------
+let examLocked = false;
+
+function lockAllInputs() {
+  examArea.querySelectorAll('input, select, textarea').forEach(i => i.disabled = true);
+}
+
+function gradeExam() {
+  let autoScore = 0, autoTotal = 0;
+  registry.forEach(item => {
+    if (item.kind === 'mc' || item.kind === 'clozeMc') {
+      const inputEl = item.kind === 'mc' ? null : document.getElementById('ans_' + item.num);
+      const correct = isCorrect(item);
+      if (item.auto) { autoTotal++; if (correct) autoScore++; }
+      if (item.kind === 'mc') {
+        const card = document.getElementById('q_' + item.partId + '_' + item.num);
+        card.querySelectorAll('.option-label').forEach(l => l.classList.remove('correct', 'incorrect'));
+        const checked = document.querySelector('input[name="mc_' + item.partId + '_' + item.num + '"]:checked');
+        if (checked && item.auto) checked.closest('.option-label').classList.add(correct ? 'correct' : 'incorrect');
+      } else {
+        if (inputEl && item.auto) {
+          inputEl.classList.remove('correct', 'incorrect');
+          if (inputEl.value !== '') inputEl.classList.add(correct ? 'correct' : 'incorrect');
+        }
+      }
+    } else if (item.kind === 'text' || item.kind === 'clozeText') {
+      const correct = isCorrect(item);
+      if (item.auto) { autoTotal++; if (correct) autoScore++; }
+      const inputEl = item.kind === 'text' ? document.getElementById('ans_' + item.partId + '_' + item.num) : document.getElementById('ans_' + item.num);
+      if (inputEl && item.auto) {
+        inputEl.classList.remove('correct', 'incorrect');
+        if (inputEl.value !== '') inputEl.classList.add(correct ? 'correct' : 'incorrect');
+      }
+    }
+  });
+  return { autoScore, autoTotal };
+}
+
+function getUnansweredList() {
+  const list = [];
+  registry.forEach(item => { if (!isAnswered(item)) list.push(item); });
+  return list;
+}
+
+function doSubmit() {
+  examLocked = true;
+  const { autoScore, autoTotal } = gradeExam();
+  lockAllInputs();
+  document.body.classList.remove('exam-active');
+
+  const manualCount = registry.filter(i => !i.auto).length;
+  const scoreBox = document.getElementById('scoreBox');
+  scoreBox.style.display = 'block';
+  scoreBox.innerHTML =
+    '<p><strong>Điểm tự động chấm: ' + autoScore + ' / ' + autoTotal + '</strong> (Phần A, B, C và C.I–C.III)</p>' +
+    '<p>Còn ' + manualCount + ' câu/mục (D.I, D.II – bài luận) cần giáo viên chấm trực tiếp.</p>' +
+    '<p>Số lần rời khỏi trang trong khi làm bài: ' + tabSwitchCount + '</p>';
+  if (scoreBox.scrollIntoView) scoreBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+  document.getElementById('submitBtn').disabled = true;
+  document.getElementById('emailBtn').disabled = false;
+  stopTimer();
+}
+
+document.getElementById('submitBtn').addEventListener('click', () => {
+  const unanswered = getUnansweredList();
+  if (unanswered.length > 0) {
+    const listBox = document.getElementById('unansweredList');
+    listBox.innerHTML = unanswered.map(i => 'Phần ' + i.partId + ' - Câu ' + i.num).join('<br>');
+    document.getElementById('confirmText').textContent = 'Bạn còn ' + unanswered.length + ' câu chưa trả lời:';
+    document.getElementById('confirmOverlay').style.display = 'flex';
+  } else {
+    doSubmit();
+  }
+});
+document.getElementById('backToExam').addEventListener('click', () => {
+  document.getElementById('confirmOverlay').style.display = 'none';
+});
+document.getElementById('confirmSubmitAnyway').addEventListener('click', () => {
+  document.getElementById('confirmOverlay').style.display = 'none';
+  doSubmit();
+});
+
+// ---------- Email ----------
+document.getElementById('emailBtn').addEventListener('click', () => {
+  const name = document.getElementById('studentName').value.trim() || "Học sinh chưa ghi tên";
+  const { autoScore, autoTotal } = gradeExam();
+
+  let lines = [];
+  lines.push("Học sinh: " + name);
+  lines.push("Đề: ADVANCED ENGLISH PROFICIENCY TEST");
+  lines.push("Điểm tự động chấm: " + autoScore + " / " + autoTotal);
+  lines.push("Số lần rời khỏi trang khi làm bài: " + tabSwitchCount);
+  lines.push("");
+
+  examData.parts.forEach(part => {
+    if (part.pending) return;
+    lines.push("=== PHẦN " + part.id + " ===");
+    registry.filter(i => i.partId === part.id).forEach(item => {
+      const v = getAnswerValue(item);
+      let display = '';
+      if (item.kind === 'mc' || item.kind === 'clozeMc') {
+        display = (v !== null && v !== undefined) ? String.fromCharCode(65 + v) + '. ' + stripTags(item.options[v]) : '(không trả lời)';
+      } else {
+        display = (v && v.trim() !== '') ? v : '(không trả lời)';
+      }
+      let tag = '';
+      if (item.auto) tag = isCorrect(item) ? ' [đúng]' : ' [sai]';
+      else tag = ' [GV chấm]';
+      lines.push('Câu ' + item.num + ': ' + display + tag);
+    });
+    lines.push('');
+  });
+
+  let reflectionBlock = null;
+  examData.parts.forEach(part => {
+    (part.blocks || []).forEach(b => { if (b.type === 'reflection') reflectionBlock = b; });
+  });
+  if (reflectionBlock) {
+    lines.push("=== PHẢN HỒI HỌ TẬP THÁNG 8 ===");
+    const checked = document.querySelector('input[name="reflectionRating"]:checked');
+    const ratingText = checked ? reflectionBlock.scale[parseInt(checked.value, 10)].label : '(chưa đánh giá)';
+    const commentEl = document.getElementById('reflectionComment');
+    const comment = commentEl && commentEl.value.trim() !== '' ? commentEl.value.trim() : '(không có)';
+    lines.push('Mức độ hài lòng: ' + ratingText);
+    lines.push('Chia sẻ thêm: ' + comment);
+    lines.push('');
+  }
+
+  const emailBtn = document.getElementById('emailBtn');
+  emailBtn.disabled = true;
+  emailBtn.textContent = "Đang gửi...";
+
+  fetch("https://formsubmit.co/ajax/" + TEACHER_EMAIL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "Accept": "application/json" },
+    body: JSON.stringify({
+      _subject: "Kết quả bài kiểm tra - " + name,
+      name: name,
+      score: autoScore + " / " + autoTotal,
+      tab_switches: String(tabSwitchCount),
+      answers: lines.join("\n")
+    })
+  })
+  .then(res => res.json())
+  .then(() => {
+    emailBtn.textContent = "Đã gửi kết quả";
+    const status = document.getElementById('emailStatus');
+    status.style.display = 'block';
+    status.style.color = '#1c6e4a';
+    status.textContent = "Kết quả đã được gửi đến giáo viên.";
+  })
+  .catch(() => {
+    emailBtn.disabled = false;
+    emailBtn.textContent = "Gửi kết quả qua email";
+    const status = document.getElementById('emailStatus');
+    status.style.display = 'block';
+    status.style.color = '#a8402d';
+    status.textContent = "Gửi thất bại. Vui lòng kiểm tra kết nối mạng và thử lại.";
+  });
+});
+
+// ---------- Teacher unlock / reveal answers ----------
+document.getElementById('unlockBtn').addEventListener('click', () => {
+  document.getElementById('modalOverlay').style.display = 'flex';
+  document.getElementById('modalError').style.display = 'none';
+  document.getElementById('passwordInput').value = '';
+});
+document.getElementById('cancelUnlock').addEventListener('click', () => {
+  document.getElementById('modalOverlay').style.display = 'none';
+});
+document.getElementById('confirmUnlock').addEventListener('click', tryUnlock);
+document.getElementById('passwordInput').addEventListener('keydown', (e) => { if (e.key === 'Enter') tryUnlock(); });
+
+function tryUnlock() {
+  const entered = document.getElementById('passwordInput').value;
+  if (entered === PASSWORD) {
+    document.getElementById('modalOverlay').style.display = 'none';
+    registry.forEach(item => {
+      let text = '';
+      if (item.kind === 'mc' || item.kind === 'clozeMc') {
+        text = 'Đáp án đúng: ' + String.fromCharCode(65 + item.answer) + '. ' + item.options[item.answer];
+      } else if (item.kind === 'text' || item.kind === 'clozeText') {
+        const label = item.refLabel ? item.refLabel : 'Đáp án';
+        text = label + ': ' + item.answers.join(' / ');
+      } else {
+        return;
+      }
+      let reveal = document.getElementById('reveal_' + item.partId + '_' + item.num);
+      if (!reveal) reveal = document.getElementById('reveal_' + item.num);
+      if (reveal) { reveal.style.display = 'block'; reveal.innerHTML = text; }
+    });
+  } else {
+    document.getElementById('modalError').style.display = 'block';
+  }
+}
+document.getElementById('modalOverlay').addEventListener('click', (e) => {
+  if (e.target.id === 'modalOverlay') document.getElementById('modalOverlay').style.display = 'none';
+});
+
+// ---------- Timer ----------
+let secondsLeft = TOTAL_SECONDS;
+let timerInterval = null;
+function formatTime(s) {
+  const m = Math.floor(s / 60);
+  const sec = s % 60;
+  return String(m).padStart(2, '0') + ':' + String(sec).padStart(2, '0');
+}
+function tickTimer() {
+  secondsLeft--;
+  const chip = document.getElementById('timerChip');
+  chip.textContent = formatTime(Math.max(secondsLeft, 0));
+  chip.classList.toggle('low', secondsLeft <= 300);
+  if (secondsLeft <= 0) {
+    stopTimer();
+    if (!examLocked) {
+      doSubmit();
+      alert('Đã hết 90 phút làm bài. Bài làm đã được tự động nộp.');
+    }
+  }
+}
+function startTimer() { timerInterval = setInterval(tickTimer, 1000); }
+function stopTimer() { if (timerInterval) clearInterval(timerInterval); }
+
+// ---------- Tab switch / exit counter ----------
+let tabSwitchCount = 0;
+function registerSwitch() {
+  if (examLocked) return;
+  tabSwitchCount++;
+  document.getElementById('switchChip').textContent = 'Rời khỏi trang: ' + tabSwitchCount + ' lần';
+}
+document.addEventListener('visibilitychange', () => { if (document.hidden) registerSwitch(); });
+window.addEventListener('blur', registerSwitch);
+
+// ---------- Anti-copy deterrents ----------
+let toastTimeout = null;
+function showCopyToast() {
+  const toast = document.getElementById('copyToast');
+  toast.classList.add('show');
+  clearTimeout(toastTimeout);
+  toastTimeout = setTimeout(() => toast.classList.remove('show'), 1800);
+}
+document.addEventListener('contextmenu', (e) => { e.preventDefault(); showCopyToast(); });
+document.addEventListener('copy', (e) => { e.preventDefault(); showCopyToast(); });
+document.addEventListener('cut', (e) => { e.preventDefault(); showCopyToast(); });
+document.addEventListener('selectstart', (e) => {
+  const tag = e.target.tagName;
+  if (tag !== 'INPUT' && tag !== 'TEXTAREA') e.preventDefault();
+});
+document.addEventListener('keydown', (e) => {
+  const key = e.key ? e.key.toLowerCase() : '';
+  const blockedCombo = (e.ctrlKey || e.metaKey) && ['c', 'u', 's', 'x'].includes(key);
+  const devTools = key === 'f12' || ((e.ctrlKey || e.metaKey) && e.shiftKey && ['i', 'j', 'c'].includes(key));
+  if (blockedCombo || devTools) {
+    e.preventDefault();
+    showCopyToast();
+  }
+});
+
+// ---------- Init ----------
+buildNavLinks();
+renderExam();
+updateProgress();
+document.body.classList.add('exam-active');
+startTimer();
+
+</script>
+</body>
+</html>
